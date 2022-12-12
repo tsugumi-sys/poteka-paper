@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "textlint": "^12.2.4",
     "textlint-plugin-latex2e": "^1.2.0",
     "textlint-rule-preset-ja-technical-writing": "^7.0.0",
     "textlint-rule-preset-japanese": "^7.0.0"
