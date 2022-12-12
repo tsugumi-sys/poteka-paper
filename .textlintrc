@@ -1,7 +1,15 @@
 {
     "rules": {
-        "preset-japanese": true,
-		"preset-ja-technical-writing": true,
+        "preset-japanese": {
+            "sentence-length": {
+                 "max": 125
+             },
+        },
+		"preset-ja-technical-writing": {
+            "sentence-length": {
+                 "max": 125
+             },
+        },
         "ja-technical-writing/max-kanji-continuous-len": false,
     },
     plugins: ["latex2e"]
