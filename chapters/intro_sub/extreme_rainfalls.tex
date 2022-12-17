@@ -13,13 +13,13 @@
 近年における状況をMasaki[2020]の発表をもとにまとめる。気象庁における統計
 データ[1]では、1時間降水量が50、80、200、400mm以上の降雨の年間発生件数の、
 1975 年以降の変化傾向はいずれにおいても増加トレンドにあることが示されて
-いる。（図1）
+いる。（図\ref{fig:kisyotyo-rainfall}）
 
 \begin{figure}[H]
 	\begin{tabular}{cc}
 		\begin{minipage}[t]{1.0\hsize}
 		\begin{center}
-		\includegraphics[width=1.0\linewidth,clip]{fig/intro/kisyotyo-repo-chart50-80.png}
+		\includegraphics[width=0.9\linewidth,clip]{fig/intro/kisyotyo-repo-chart50-80.png}
 		\subcaption{50mm（左）、80mm（右）}
 		\label{a}
 		\end{center}
@@ -27,34 +27,39 @@
 		
 		\begin{minipage}[t]{1.0\hsize}	
 		\begin{center}
-		\includegraphics[width=1.0\linewidth,clip]{fig/intro/kisyotyo-repo-chart200-400.png}
+		\includegraphics[width=0.9\linewidth,clip]{fig/intro/kisyotyo-repo-chart200-400.png}
 		\subcaption{200mm（左）、400mm（右）}
 		\label{b}
 		\end{center}
 		\end{minipage}
 	\end{tabular}
+	\captionsetup{width=0.9\linewidth}
 	\caption{1976-2018年期間の全国のアメダスの1時間降水量50mm、80mm (a)、200mm、400mm (b) 以上の年間発生回数の変化。棒グラフは全国のアメダスによる観測値を 1300 地点当たりに換算した値、直線は長期変化傾向を表す。}
+	\label{fig:kisyotyo-rainfall}
 \end{figure}
 
 Fumikai \textit{et al}.[2006]は、国内51地点の104年間（1901～2004年）の日降水量の資料
 から日降水量の降水階級、100mm以上の日数、年最大降水量、年間の上位100事例の
-発生頻度等の様々な大雨の尺度を用いて経年変化を調べた。いずれの尺度においても大雨の数は
-増加傾向にあることがわかる。
+発生頻度等の様々な大雨の尺度を用いて経年変化を調べた。図\ref{fig:fumikai-chart}の結果
+からいずれの尺度においても大雨の数は増加傾向にあることがわかる。
 
 \begin{figure}[H]
 \begin{center}
-\includegraphics[width=0.8\linewidth]{fig/intro/fumikai-et-al-chart1.png}
+\includegraphics[width=0.9\linewidth]{fig/intro/fumikai-et-al-chart1.png}
+\captionsetup{width=0.9\linewidth}
 \caption{1901-2004年期間の極端豪雨の経年変化：100mm以上の日数、年最大降水量、累年の上位100事例の発生頻度の時系列を示す。横軸は年。}
+\label{fig:fumikai-chart}
 \end{center}
 \end{figure}
 
-日本における極端豪雨の事例のうち、甚大な被害を起こした現象については気象庁が名称を定めている。（表1）
+日本における極端豪雨の事例のうち、甚大な被害を起こした現象については気象庁が名称を定めている。（表\ref{tb:japan-heavy-rainfalls}）
 
 \begin{table}[H]
 \renewcommand{\arraystretch}{1.5}
 \small
+\captionsetup{width=0.9\linewidth}
 \caption{平成以降に気象庁が定めた気象現象からの豪雨事例（気象庁ホームページ: \protect\url{https://www.jma.go.jp/jma/kishou/know/meishou/meishou_ichiran.html}より改変）}
-\label{table:JapanExtremeRainfalls}
+\label{tb:japan-heavy-rainfalls}
 \centering
 \begin{tabularx}{\textwidth}{>{\hsize=.5\hsize}X>{\hsize=.5\hsize}XX}
 \hline
