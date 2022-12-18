@@ -1,12 +1,7 @@
 P-POTEKAのデータは35個の観測点におけるそれぞれの位置での気象データである。
-本研究では機械学習モデルが学習可能なデータ形式にするために、生のP-POTEKA
+本研究では機械学習モデルが学習可能なデータ形式とするために、生のP-POTEKA
 に対してガウス過程回帰と呼ばれる手法を用いてグリッドデータに変換した。
 
-% あの本を読みなおしてまとめる！ 
-% 1. ガウス過程回帰の概要説明。メリットデメリットも。
-% 2. 多次元ガウス分布の説明。平均、共分散行列など。
-% 3. P63付近、線形回帰からガウス過程までの導出。カーネルの説明。P81の事前に得られたデータDが...を最初に持ってくる。予測分布。
-% 4. カーネルの補足説明。事前知識を反映できる。
 まずガウス過程とは関数$f(x)$を確率変数と見立てた確率分布のことである。
 そしてガウス過程回帰とは、データから関数$f(x)$の確率分布をガウス過程の形で
 求める方法のことである。関数$f(x)$の任意個数の入力点$x_{1}, ..., x_{N}$
@@ -17,11 +12,13 @@ P-POTEKAのデータは35個の観測点におけるそれぞれの位置での�
 さらに線形回帰などとは異なり、非線形な関数に対してもフィッティングできる
 柔軟性を持つ。
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 多変量ガウス分布とは$D$次元のベクトル$\boldsymbol{x} = (x_{1}, ..., x_{D})$の
 変数がそれぞれ独立にガウス分布に従う場合における同時分布のことである。ベクト
 ル$\boldsymbol{x}$が平均$\boldsymbol{\mu}$、共分散行列$\boldsymbol{\Sigma}$のガウス分布
 $\mathcal{N}(\boldsymbol{x} | \boldsymbol{\mu}, \boldsymbol{\Sigma})$に従っ
 ているとき、確立密度関数は以下のように表される。
+% textlint-enable
 
 \begin{equation}
 \label{eq:multivariate-dist}
@@ -35,6 +32,7 @@ $\mathcal{N}(\boldsymbol{x} | \boldsymbol{\mu}, \boldsymbol{\Sigma})$に従っ
       \right\}
 \end{equation}
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 $\boldsymbol{\mu} = (\mu_{1}, ..., \mu_{N})$は$\boldsymbol{x}$の期待値を表す
 平均ベクトル、$\Sigma$は$D \times D$の共分散行列でその要素$(i, j)$が$x_{i}$と
 $x_{j}$の共分散を表している。
@@ -43,6 +41,7 @@ $x_{j}$の共分散を表している。
 によって$\boldsymbol{x}$の写像を並べた特徴ベクトル
 $\boldsymbol{\phi}(\boldsymbol{x}) = (\phi_{0}(\boldsymbol{x}), \phi_{1}(\boldsymbol{x}), ..., \phi_{H}(\boldsymbol{x}))^T$
 とパラメータ$\boldsymbol{w}$を用いて以下のように表される。
+% textlint-enable
 
 \begin{equation}
 \label{eq:liner-regression-model}
@@ -75,6 +74,7 @@ $\hat{y}$は観測データ$y$に近づけるあてはめ値である。
    \end{bmatrix}
 \end{align}
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 この方法では入力$\boldsymbol{x}$の次元数が小さい場合でしか使えないという問題がある。
 なぜなら学習すべきパラメータ$\boldsymbol{w}$の次元が入力次元の増大に対して指数的に
 増加してしまうためである。この問題は一般的に次元の呪いと呼ばれている。ガウス過程回
@@ -82,19 +82,21 @@ $\hat{y}$は観測データ$y$に近づけるあてはめ値である。
 回避している。$\boldsymbol{\hat{y}} = (\hat{y_{1}}, ..., \hat{y_{N}})$、
 $\boldsymbol{w} = (w_{0}, ..., w_{H})$、および$\Phi_{nh} = \phi_{h}(\boldsymbol{x}_{n})$
 を要素とする計画行列$\boldsymbol{\Phi}$を用いると、先ほどの行列形式は以下のように書ける。
+% textlint-enable
 
 \begin{equation}\label{eq:y-equals-phi-w}
 \boldsymbol{\hat{y}} = \boldsymbol{\Phi}\boldsymbol{w}
 \end{equation}
 
 ガウス過程では重み$\boldsymbol{w}$が平均$\boldsymbol{0}$、分散$\lambda^2\boldsymbol{I}$のガウス分布
+(計算式\ref{eq:w-gausian-distribution})から生成されたものだと仮定する。
 
-\begin{equation}
+\begin{equation}\label{eq:w-gausian-distribution}
 \boldsymbol{w} \sim \mathcal{N}(\boldsymbol{0}, \lambda^2\boldsymbol{I})
 \end{equation}
 
-から生成されたものだと仮定する。この場合式(\ref{eq:y-equals-phi-w})は$\boldsymbol{\hat{y}}$
-は、ガウス分布に従うベクトル$\boldsymbol{w}$を定数行列$\boldsymbol{\Phi}$で線形変換した
+この場合、式(\ref{eq:y-equals-phi-w})の$\boldsymbol{\hat{y}}$
+はガウス分布に従うベクトル$\boldsymbol{w}$を定数行列$\boldsymbol{\Phi}$で線形変換した
 ものとなっている。したがって$\boldsymbol{\hat{y}}$もガウス分布に従う。$\boldsymbol{\hat{y}}$
 の期待値、共分散行列は以下のように求められる。
 
@@ -111,35 +113,39 @@ $\boldsymbol{w} = (w_{0}, ..., w_{H})$、および$\Phi_{nh} = \phi_{h}(\boldsym
 \end{split}
 \end{equation}
 
-結果として$\boldsymbol{\hat{y}}$の分布は、多変量ガウス分布
+結果として$\boldsymbol{\hat{y}}$の分布は、多変量ガウス分布となることがわかる(計算式\ref{eq:y-multi-normal-distribution})。
 
 \begin{equation}\label{eq:y-multi-normal-distribution}
 \boldsymbol{\hat{y}} \sim \mathcal{N}(\boldsymbol{0}, \lambda^2\boldsymbol{\Phi}\boldsymbol{\Phi}^T)
 \end{equation}
 
-となることがわかる。この式からわかるように重み$\boldsymbol{w}$は期待値がとられることによって消去されている。
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
+この式からわかるように重み$\boldsymbol{w}$は期待値がとられることによって消去されている。
 したがって入力$\boldsymbol{x}$や$\phi(\boldsymbol{x})$の次元がどれだけ高くとも、対応する高次元の重み$\boldsymbol{w}$を
 求める必要はなく、$\boldsymbol{y}$の分布はデータ数$N$に依存する共分散行列$\lambda^2\boldsymbol{\Phi}\boldsymbol{\Phi}^2$で
 決まる。
+% textlint-enable
 
-式(\ref{eq:y-multi-normal-distribution})の共分散行列を
+式(\ref{eq:y-multi-normal-distribution})の共分散行列を以下のようにおく。
 
 \begin{equation}
 \boldsymbol{K} = \lambda^2\boldsymbol{\Phi}\boldsymbol{\Phi}^T
 \end{equation}
 
-とおくと、この$(n,n')$要素は
+$\boldsymbol{K}$の$(n,n')$要素は以下のように与えられる。
 
 \begin{equation}
 K_{nn'} = \lambda^2\phi(\boldsymbol{x}_{n})^T\phi(\boldsymbol{x}_{n'})
 \end{equation}
 
-で与えられる。すなわち$\boldsymbol{x}_{n}$と$\boldsymbol{x'}_{n'}$の特徴ベクトル$\boldsymbol{\phi}(\boldsymbol{x}_{n})$と
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
+すなわち$\boldsymbol{x}_{n}$と$\boldsymbol{x'}_{n'}$の特徴ベクトル$\boldsymbol{\phi}(\boldsymbol{x}_{n})$と
 $\boldsymbol{\phi}(\boldsymbol{x}_{n'})$の内積の定数倍が共分散行列$\boldsymbol{K}$の$(n,n')$要素$K_{nn'}$になっている。
 多変量ガウス分布において2つの変数間の共分散が大きいということは似た値を取りやすいことを意味する。
-すなわち、$\boldsymbol{x}_{n}$と$\boldsymbol{x}_{n'}$が似ているなら、対応する$\hat{y_{n}}$と$\hat{y_{n'}}$も似た値を
+したがって、$\boldsymbol{x}_{n}$と$\boldsymbol{x}_{n'}$が似ているなら、対応する$\hat{y_{n}}$と$\hat{y_{n'}}$も似た値を
 持つことになる。さらにガウス過程回帰では共分散行列$\boldsymbol{K}$の要素$\phi(\boldsymbol{x}_{n})^T\phi(\boldsymbol{x}_{n'}$を
 明示的に求めることはせず、カーネル関数$k(\boldsymbol{x}_{n}, \boldsymbol{x}_{n'})$で以下のように置き換える。
+% textlint-enable
 
 \begin{equation}
 k(\boldsymbol{x}_{n}, \boldsymbol{x}_{n'}) = \phi(\boldsymbol{x}_{n})^T\phi(\boldsymbol{x}_{n'} 
@@ -148,7 +154,8 @@ k(\boldsymbol{x}_{n}, \boldsymbol{x}_{n'}) = \phi(\boldsymbol{x}_{n})^T\phi(\bol
 こうすることで特徴ベクトル$\phi(\boldsymbol{x})$を明示的に表現することなしに、カーネル関数のみに基づく簡単な計算で計画行列
 を求めることができる。カーネル関数を適切に設計することで、$\boldsymbol{K}$の逆行列が計算できない場合を避けることができる。
 代表的なカーネル関数として線形カーネル(式\ref{eq:linear-kernel-func})や指数カーネル(式\ref{eq:exponential-kernel-func}, $\theta$はパラメータ)
-がある。カーネル関数はデータ間の距離に応じた出力の類似度を表現していることから、出力の特徴に応じて設計することも可能である。
+がある。カーネル関数はデータ間の距離に応じた出力の類似度を表現していることから、出力の特徴に応じて設計可能である。データに関する
+事前情報を反映できることを意味し、これによってより柔軟なモデルの構築を可能とする。
 
 \begin{gather}
 k(\boldsymbol{x}, \boldsymbol{x'}) = \boldsymbol{x}^T\boldsymbol{x'} \label{eq:linear-kernel-func} \\
@@ -168,9 +175,11 @@ k(\boldsymbol{x}, \boldsymbol{x'}) = exp(-|\boldsymbol{x} - \boldsymbol{x'}|/\th
 \boldsymbol{y} \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{K})
 \end{equation}
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 この分布を用いて新しい観測点$\boldsymbol{X}^* = (\boldsymbol{x}_{1}^*, \boldsymbol{x}_{2}^*, ..., \boldsymbol{x}_{M}^*)$
 での予測値$\boldsymbol{y}^* = (y_{1}^*, y_{2}^*, ..., y_{M}^*)$を求めたい場合を考える。$\boldsymbol{y}^*$も多変量ガウス分布
 に従うことからすでに得られている分布$\boldsymbol{y}$との同時分布もガウス分布に従うことが分かる。この同時分布を以下に示す。
+% textlint-enable
 
 \begin{align}
 \begin{bmatrix}
@@ -201,16 +210,20 @@ k(\boldsymbol{x}, \boldsymbol{x'}) = exp(-|\boldsymbol{x} - \boldsymbol{x'}|/\th
   )
 \end{align}
 
-新しい観測点$\boldsymbol{X}^*$における出力$\boldsymbol{y}^*$の周辺分布$p(\boldsymbol{y}^*|\boldsymbol{X}^*, \mathcal{D})$
-を求めることで未観測点の出力を推定することができる。同時分布がガウス分布に従っていることから周辺分布もガウス分布となることがわかる。
+ガウス過程回帰における予測とは、新しい観測点$\boldsymbol{X}^*$における出力$\boldsymbol{y}^*$の周辺分布$p(\boldsymbol{y}^*|\boldsymbol{X}^*, \mathcal{D})$
+を求めることである。同時分布がガウス分布に従っていることから周辺分布もガウス分布となることがわかる。
 予測値を求めていることから、この周辺分布は予測分布とも呼ばれる。以下のように計算される。
 
 \begin{equation}
 p(\boldsymbol{y}^*|\boldsymbol{X}^*, \mathcal{D}) = \mathcal{N}(\boldsymbol{k}_{*}^T\boldsymbol{K}^{-1}\boldsymbol{y}, \boldsymbol{k}_{**}\boldsymbol{K}^{-1}\boldsymbol{k}_{*})
 \end{equation}
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 ただし$\boldsymbol{k}_{*}(n, m) = k(\boldsymbol{x}_{n}, \boldsymbol{x}_{m}^*)$、$\boldsymbol{k}_{**}(m, m') = k(\boldsymbol{x}_{m}, \boldsymbol{x}_{m'}^*)$である。
+% textlint-enable
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 本研究においては、$\boldsymbol{x}$は緯度・経度の2次元で$y$は地点$\boldsymbol{x}$における気象パラメータである。また、気象パラメータの特徴ごとに
 カーネル関数を設定した。具体的には、雨や風はデータの距離が近いほど似たデータになるが距離が大きくなると途端に類似度は下がると仮定し指数カーネル
 を用いた。気温や湿度など雨や風程には地域間で差が生じないようなデータには線形カーネルを用いた。
+% textlint-enable

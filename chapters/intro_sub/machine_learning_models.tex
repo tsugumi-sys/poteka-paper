@@ -2,11 +2,13 @@
 大化などの要因に後押しされ、機械学習の分野の発展は大変著しい。この機械学習の技術を
 用いて上記の極端降雨現象の予測に対する新しいアプローチの模索が行われている。
 
+% textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 降雨のような時空間データを学習させるための機械学習モデルとしてShi \textit{et al}.[2015]
 によってConvLSTM(Convolutional Long-Short Term Memory)が発表された。ConvLSTMは空間的な
 特徴を学習させるための機械学習モデルであるCNN(Convolutional Neural Network, Hubel and Wiesel.[1962])と、時間的な
 変化を学習させるためのモデルであるLSTM(Long-Short Term Memory, Hochreiter and Schmidhuber.[1997])を組み合わせた機械学習モデル
 である。具体的な計算式は以下の通りである。
+% textlint-enable
 
 \begin{gather}
   i_{t} = \sigma\left(W_{xi} * X_{t} + W_{hi} * H_{t−1} + W_{ci} \odot \mathcal{C}_{t−1} + b_{i}\right)\label{eq:convlstm1} \\ 
