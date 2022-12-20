@@ -1,0 +1,46 @@
+学習データとして内挿処理を施した10分間隔のP-POTEKAのグリッドデータを用いた。
+気象データ各々は最大値1、最小値0に正規化した。
+入力と出力のペア（例；入力1時間6ステップ、出力1時間6ステップ）をサブセットとして
+時間をずらしながらこのサブセットを大量に作成した。さらにこのサブセットの集合を
+学習用・評価用・検証用データセットに分割した。比率はそれぞれ学習用データセットが
+80\%、評価用データセットが15\%、検証用データセットが5\%とした。モデルの学習に学習
+用データセットを用いて、同時並行でモデルの汎化性能を評価するために評価用データセット
+を用いた。最後に表\ref{tb:poteka-heavy-rainfalls}から強い降雨イベントを取り出た検証用
+データセットを用いてSelfAttention ConvLSTMの性能や内部状態を検証した。
+
+学習ではSelf-Attention ConvLSTMを4層に重ねたモデルを用いた。さらに各々の
+Self-Attention ConvLSTMの隠れ状態の数は64に設定した。損失関数にはバイナリ
+ークロスエントロピー誤差関数を用いた。最適化関数には学習率を0.0001に設定した
+Adam関数を用いた。バイナリークロスエントロピー誤差関数は正規化された値に対する
+誤差を評価するのに適した関数で以下のように定義される。
+
+\begin{equation}
+l_{i} = -ylog\hat{y} - (1-y)log(1-\hat{y}), i \in {1, 2, ..., N}
+\end{equation}
+
+$N$は対象データ点の数、$y$はラベル（正解値）、$\hat{y}$は予測値である。実際の損失には
+すべての与えられたデータ点におけるラベルと予測値から上記の値を計算しその平均値をとる。
+最終的な損失$L$は以下のようになる。
+
+\begin{equation}
+L = \frac{\sum_{i=1}^Nl_{i}}{N}
+\end{equation}
+
+
+また、Adam関数は確率的勾配降下法における機械学習モデルの重み$\boldsymbol{W}$更新方法
+の1つである。確率的というのは、重みの更新にすべてのデータを用いず、ランダムに抽出され
+たデータを用いるということである。Adam関数は損失$L$と学習率$\eta$を用いて以下のように
+定義される。
+
+\begin{align}
+\boldsymbol{m}_{t+1} &= \beta_{1}\boldsymbol{m}_{t} + (1 - \beta_{1})\frac{\partial L}{\partial \boldsymbol{W}_{t}} \\
+\boldsymbol{v}_{t+1} &= \beta_{2}\boldsymbol{m}_{t} + (1 - \beta_{2})\frac{\partial L}{\partial \boldsymbol{W}_{t}} \odot \frac{\partial L}{\partial \boldsymbol{W}_{t}} \\
+\boldsymbol{\hat{m}}_{t+1} &= \frac{\boldsymbol{m}_{t+1}}{1 - \beta_{1}^t} \\
+\boldsymbol{\hat{v}}_{t+1} &= \frac{\boldsymbol{v}_{t+1}}{1 - \beta_{2}^t} \\
+\boldsymbol{W}_{t+1} &= \boldsymbol{W}_{t} - \eta\frac{1}{\sqrt{\boldsymbol{\hat{v}}_{t+1}} + \epsilon} \odot \boldsymbol{\hat{m}}_{t+1}
+\end{align}
+
+$t$は更新ステップを示す。実際の学習ではランダムに抽出されたデータが複数作成され、逐次的に重みが更新されていく。
+$t+1$は$t$に対して次の更新ステップであることを示す。$\beta_{1}$と$\beta_{2}$は減衰率パラメータであり0から1の範囲をとる。
+
+% TODO: 4 layerd model fig

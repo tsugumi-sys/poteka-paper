@@ -148,7 +148,7 @@ $\boldsymbol{\phi}(\boldsymbol{x}_{n'})$の内積の定数倍が共分散行列$
 % textlint-enable
 
 \begin{equation}
-k(\boldsymbol{x}_{n}, \boldsymbol{x}_{n'}) = \phi(\boldsymbol{x}_{n})^T\phi(\boldsymbol{x}_{n'} 
+k(\boldsymbol{x}_{n}, \boldsymbol{x}_{n'}) = \phi(\boldsymbol{x}_{n})^T\phi(\boldsymbol{x}_{n'}) 
 \end{equation}
 
 こうすることで特徴ベクトル$\phi(\boldsymbol{x})$を明示的に表現することなしに、カーネル関数のみに基づく簡単な計算で計画行列
@@ -225,5 +225,6 @@ p(\boldsymbol{y}^*|\boldsymbol{X}^*, \mathcal{D}) = \mathcal{N}(\boldsymbol{k}_{
 % textlint-disable japanese/sentence-length,ja-technical-writing/sentence-length
 本研究においては、$\boldsymbol{x}$は緯度・経度の2次元で$y$は地点$\boldsymbol{x}$における気象パラメータである。また、気象パラメータの特徴ごとに
 カーネル関数を設定した。具体的には、雨や風はデータの距離が近いほど似たデータになるが距離が大きくなると途端に類似度は下がると仮定し指数カーネル
-を用いた。気温や湿度など雨や風程には地域間で差が生じないようなデータには線形カーネルを用いた。
+を用いた。気温や湿度など雨や風程には地域間で差が生じないようなデータには線形カーネルを用いた。最終的にP-POTEKAの設置個所を含めた東経$120^{\circ}9'$~
+$121^{\circ}15'$、北緯$14^{\circ}35'$~$14^{\circ}76'$の範囲における$H \times W = 50 \times 50$のグリッドデータを作成した。
 % textlint-enable

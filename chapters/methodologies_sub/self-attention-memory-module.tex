@@ -1,0 +1,62 @@
+未来の状態を予測する際に過去の情報を用いることは非常に重要である。
+Lin \textit{et al}.[2020]らはSelf-Attention機構を時空間モデルであるConvLSTM
+と組み合わせるためにSelf-Attention機構の情報を時系列で扱うためのSelf-Attentionメモリー
+機構（SAM）を提案した。計算の概要は図\ref{fig:self-attention-memory-module}右
+側に示されている。
+
+SAMは時刻$t$における入力$\mathcal{H}_{t}$とひとつ前の時刻$t-1$におけるSAM自身の
+状態$\mathcal{M}_{t-1}$の2つを入力として受け取る。上記の計算過程は3つのステップ
+（特徴量抽出、メモリー状態更新、出力）に分かれている。
+
+\textbf{特徴量抽出ステップ: }Self-Attentionメモリー機構（図\ref{fig:self-attention-memory-module}）の
+$\boldsymbol{Z}$は$\boldsymbol{Z}_{h}$と$\boldsymbol{Z}_{m}$を合成することで得られる。$\boldsymbol{Z}_{h}$は
+入力$\mathcal{H}_{t}$に対するSelf-Attention機構の計算処理を経て計算される。$\boldsymbol{Z}_{m}$は$\mathcal{M}_{t-1}$に
+対する特徴量抽出によって計算される。具体的には入力された$\mathcal{M}_{t-1}$と重み$\boldsymbol{K}_{mk}$・$\boldsymbol{K}_{mv}$から
+$\boldsymbol{key : K_{m}}$と$\boldsymbol{value : V_{m}}$が計算される。そして入力$\mathcal{H}_{t}$と過去のメモリー$\mathcal{M}_{t-1}$に
+対する関連度が以下のように計算される。
+
+\begin{equation}
+\boldsymbol{e}_{m} = \boldsymbol{Q}_{h}^T\boldsymbol{K_{m}} \in \mathbb{R}6{N \times N}.
+\end{equation}
+
+この関連度はSelf-Attention機構の場合と同様に正規化され以下のようになる。
+
+\begin{equation}
+\alpha_{i,j} = \frac{\exp(e_{m;i,j})}{\sum_{k=1}^N\exp(e_{m;i,k})}, i,j \in {1, 2, ..., N}
+\end{equation}
+
+そして$i$番目のデータ点における特徴量$\boldsymbol{Z_{m}}$は過去のメモリー状態$\mathcal{M}_{t-1}$を
+先ほど計算した関連度を用いて変換することで得られる。
+
+\begin{equation}
+\boldsymbol{Z}_{m;i} = \sum_{j=1}^N\alpha_{m;i,j}\boldsymbol{V}_{m;j} = \sum_{j=1}^N\alpha_{m;i,j}\boldsymbol{W}_{mv}\mathcal{M}_{t-1;j}
+\end{equation}
+
+$\mathcal{M}_{t-1;j}$は$j$番目のデータ点に対応する過去のメモリー状態である。最終的に特徴量$\boldsymbol{Z}$は以下のように得られる。
+
+\begin{equation}
+\boldsymbol{Z} = \boldsymbol{W}_{z}[\boldsymbol{Z}_{h};\boldsymbol{Z}_{m}]
+\end{equation}
+
+\textbf{メモリー状態更新ステップ: }過去の情報を効率よく保持しておくためにLSTMモデルでも用いられている
+ゲートを応用した。具体的な計算式を以下に示す。
+
+\begin{align}
+i'_{t} &= \sigma(W_{m;zi} \ast \boldsymbol{Z} + W_{m;hi} \ast \mathcal{H}_{t} + b_{m;i}) \\
+g'_{t} &= tanh(W_{m;zg} \ast \boldsymbol{Z} + W_{m;hg} \ast \mathcal{H}_{t} + b_{m;g}) \\
+\mathcal{M}_{t} &= (1 - i'_{t}) \circ \mathcal{M}_{t-1} + i'_{t} \circ g'_{t}
+\end{align}
+
+入力ゲート$i'_{t}$と新たな合成された特徴量$g'_{t}$の計算には抽出された特徴量$\boldsymbol{Z}$と
+入力$\mathcal{H}_{t}$が用いられる。$b_{m;i}$と$b_{m;g}$はバイアス項である。加えて計算量を減らす
+ために忘却ゲートを$(1 - i'_{t})$で代用した。忘却ゲートで過去のメモリー状態を調整し、さらにそこ
+に入力ゲートで調査された特徴量$g'_{t}$を足すことで新たなメモリー状態に更新している。
+
+\textbf{出力ステップ: }最終的なSelf-Attentionメモリー機構の出力$\hat{\mathcal{H}}_{t}$は出力ゲート$o'_{t}$
+と更新されたメモリ$\mathcal{M}_{t}$のドット積から得られる。
+
+\begin{align}
+o'_{t} &= \sigma(W_{m;zo} \ast \boldsymbol{Z} + W_{m;ho} \ast \mathcal{H}_{t} + b_{m;o}) \\
+\hat{\mathcal{H}}_{t} &= o'_{t} \circ \mathcal{M}_{t}
+\end{align}
+
